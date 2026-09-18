@@ -7,20 +7,25 @@
   <!-- 引入 Page-Flip 翻页特效库 -->
   <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
   <style>
+    /* 1. 复古 Palette 1 标准配色 */
     :root {
-      --bg-color: #d8cfc4;
-      --paper-color: #f5f0eb;
-      --border-color: #2b2625;
-      --accent-red: #a33327;
-      --text-main: #2b2625;
+      --bg-sand: #dcd3c1;        /* 沙色背景 */
+      --paper-sand: #f0ebe1;     /* 纸张主色 */
+      --seal-brown: #362521;     /* 海豹棕 (主文字/边框) */
+      --gold: #c59b27;           /* 金色 (点缀) */
+      --cadet-gray: #7d939e;     /* 军校灰 (印章/标记) */
+      --bistre: #2d1f19;         /* 深褐色 (标题) */
+      --tape-color: rgba(235, 220, 190, 0.75); /* 和纸胶带 */
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background-color: var(--bg-color);
-      font-family: 'Courier New', Courier, STSong, '华文宋体', serif;
-      color: var(--text-main);
+      background-color: var(--bg-sand);
+      background-image: radial-gradient(rgba(54, 37, 33, 0.08) 1px, transparent 0);
+      background-size: 16px 16px;
+      font-family: 'Courier New', STSong, '华文宋体', Georgia, serif;
+      color: var(--seal-brown);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -29,175 +34,337 @@
       overflow: hidden;
     }
 
-    .tip-bar {
+    .top-badge {
       margin-bottom: 20px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: bold;
-      color: var(--accent-red);
-      background: #ebdcc9;
-      padding: 6px 16px;
-      border: 1px dashed var(--border-color);
-      letter-spacing: 1px;
+      color: var(--paper-sand);
+      background: var(--seal-brown);
+      padding: 6px 18px;
+      letter-spacing: 2px;
+      box-shadow: 3px 3px 0 var(--gold);
+      transform: rotate(-1deg);
     }
 
-    .zine-box {
-      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    /* 2. 增强 3D 杂志书本容器与阴影 */
+    .zine-viewport {
+      perspective: 1200px;
     }
 
+    .stpageflip-container {
+      box-shadow: 
+        0 20px 40px rgba(45, 31, 25, 0.35),
+        0 2px 6px rgba(0,0,0,0.2);
+      border-radius: 2px;
+    }
+
+    /* 单页基础质感 */
     .page {
-      padding: 25px;
-      background-color: var(--paper-color);
-      border: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      padding: 24px;
+      background-color: var(--paper-sand);
+      border: 1px solid rgba(54, 37, 33, 0.18);
+      position: relative;
       overflow: hidden;
-      background-image: radial-gradient(#d3cbbe 1px, transparent 0);
-      background-size: 12px 12px;
+      background-image: 
+        linear-gradient(rgba(0,0,0,0.02) 1px, transparent 0),
+        linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 0);
+      background-size: 20px 20px;
     }
 
-    .page-content {
-      border: 2px dashed var(--border-color);
-      height: 100%;
-      padding: 20px;
+    /* 书脊复古内阴影（增强 3D 弯曲立体感） */
+    .page::after {
+      content: "";
+      position: absolute;
+      top: 0; bottom: 0; left: 0; width: 25px;
+      background: linear-gradient(to right, rgba(0,0,0,0.18), rgba(0,0,0,0.02) 70%, transparent);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* 3. Zine 拼贴组件（Collage Elements） */
+    /* 和纸胶带贴纸效果 */
+    .tape {
+      position: absolute;
+      height: 22px;
+      background: var(--tape-color);
+      border-left: 2px dashed rgba(0,0,0,0.1);
+      border-right: 2px dashed rgba(0,0,0,0.1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      z-index: 5;
+    }
+    .tape-top-left { top: 10px; left: 15px; width: 70px; transform: rotate(-8deg); }
+    .tape-top-right { top: 12px; right: 15px; width: 75px; transform: rotate(5deg); }
+
+    /* 复古邮戳 / 签章 */
+    .stamp {
+      position: absolute;
+      border: 2px solid var(--cadet-gray);
+      color: var(--cadet-gray);
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border-radius: 4px;
+      transform: rotate(-12deg);
+      opacity: 0.85;
+      pointer-events: none;
+    }
+
+    /* 拍立得拼贴卡片 */
+    .polaroid {
+      background: #fff;
+      padding: 10px 10px 25px 10px;
+      border: 1px solid rgba(0,0,0,0.15);
+      box-shadow: 4px 5px 12px rgba(0,0,0,0.15);
+      transform: rotate(-2deg);
+      margin: 10px 0;
+      position: relative;
+    }
+
+    .polaroid-img {
+      width: 100%;
+      height: 140px;
+      background: var(--bg-sand);
+      border: 1px inset rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--seal-brown);
+      font-size: 12px;
     }
 
+    /* 剪报碎纸块 */
+    .clipping-tag {
+      background-color: var(--gold);
+      color: var(--bistre);
+      font-weight: bold;
+      padding: 3px 10px;
+      display: inline-block;
+      font-size: 12px;
+      transform: rotate(1.5deg);
+      box-shadow: 2px 2px 0 var(--seal-brown);
+      margin-bottom: 8px;
+    }
+
+    /* 4. 排版精细化 */
     h1 {
-      font-size: 26px;
-      border-bottom: 3px solid var(--border-color);
+      font-size: 24px;
+      color: var(--bistre);
+      font-weight: 900;
+      line-height: 1.2;
+      border-bottom: 2px solid var(--seal-brown);
       padding-bottom: 6px;
       margin-bottom: 12px;
     }
 
     h2 {
-      font-size: 16px;
-      background-color: var(--border-color);
-      color: var(--paper-color);
+      font-size: 14px;
+      color: var(--paper-sand);
+      background-color: var(--seal-brown);
       padding: 3px 8px;
       display: inline-block;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
     }
 
     p {
-      font-size: 13px;
-      line-height: 1.6;
+      font-size: 12px;
+      line-height: 1.65;
       margin-bottom: 10px;
-      text-align: justify;
+      color: var(--seal-brown);
     }
 
-    .tag {
-      display: inline-block;
-      border: 1px solid var(--accent-red);
-      color: var(--accent-red);
-      font-size: 11px;
-      padding: 1px 5px;
-      margin-right: 4px;
-      font-weight: bold;
+    .project-card {
+      background: rgba(255, 255, 255, 0.45);
+      border: 1px dashed var(--seal-brown);
+      padding: 10px;
+      margin: 8px 0;
+      transform: rotate(0.8deg);
+      box-shadow: 2px 2px 0px rgba(54, 37, 33, 0.1);
     }
 
-    .cover {
-      background-color: #ebdcc9;
-      text-align: center;
+    /* 5. 封面专门设计（Hard Cover Look） */
+    .cover-page {
+      background-color: #e5dbc9;
+      border: 2px solid var(--seal-brown);
     }
 
-    .cover .page-content {
-      border: 3px double var(--border-color);
-      align-items: center;
-      justify-content: center;
-    }
-
-    .photo-frame {
-      width: 110px;
-      height: 130px;
-      border: 2px solid var(--border-color);
-      margin: 15px 0;
+    .cover-frame {
+      border: 3px double var(--seal-brown);
+      height: 100%;
+      padding: 18px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      background: #fff;
-      font-size: 12px;
-      color: #888;
-      box-shadow: 3px 3px 0px var(--border-color);
+      justify-content: space-between;
+      position: relative;
     }
 
-    .footer-num {
-      text-align: right;
-      font-size: 12px;
-      font-weight: bold;
+    .page-footer {
+      font-size: 10px;
+      color: var(--cadet-gray);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
       margin-top: auto;
+      width: 100%;
+      border-top: 1px solid rgba(54, 37, 33, 0.15);
+      padding-top: 6px;
     }
   </style>
 </head>
 <body>
 
-  <div class="tip-bar">📖 鼠标点击或拖拽书页边缘可翻页 📖</div>
+  <div class="top-badge">✂️ 翁雨桐 // 交互翻页作品集 ZINE ✂️</div>
 
-  <div id="book" class="zine-box">
-    
-    <!-- 封面 -->
-    <div class="page cover" data-density="hard">
-      <div class="page-content">
-        <span class="tag">VOL. 01</span>
-        <h1 style="font-size: 30px; border: none; margin-top: 10px;">翁雨桐</h1>
-        <p style="font-style: italic; font-size: 13px;">PERSONAL PORTFOLIO ZINE</p>
-        <div class="photo-frame">[ PHOTO ]</div>
-        <h2>Media & Marketing</h2>
-        <p style="font-size: 12px; max-width: 85%;">复旦大学新闻学在读 // 新媒体运营与整合营销作品集</p>
-      </div>
-    </div>
+  <div class="zine-viewport">
+    <div id="book" class="zine-box">
+      
+      <!-- ==================== 封面 ==================== -->
+      <div class="page cover-page" data-density="hard">
+        <div class="tape tape-top-left"></div>
+        <div class="stamp" style="top: 20px; right: 20px;">FUDAN UNIV.</div>
+        
+        <div class="cover-frame">
+          <div style="text-align: center; width: 100%;">
+            <div class="clipping-tag">ISSUE NO. 01 // 2026</div>
+            <h1 style="font-size: 28px; border: none; margin: 8px 0 2px 0;">翁雨桐</h1>
+            <p style="font-size: 11px; letter-spacing: 2px; color: var(--cadet-gray); font-weight: bold;">PORTFOLIO ZINE</p>
+          </div>
 
-    <!-- 第 1 页 -->
-    <div class="page">
-      <div class="page-content">
-        <h2>01 / PROFILE</h2>
-        <h1>个人简介</h1>
-        <p><b>学校：</b>复旦大学新闻学院</p>
-        <p><b>定位：</b>懂内容、会数据、能落地的复合型运营/营销人。</p>
-        <hr style="margin: 10px 0; border: none; border-top: 1px dashed #333;">
-        <p><b>技能标签：</b></p>
-        <p style="margin-top:5px;"><span class="tag">SQL</span><span class="tag">Excel</span><span class="tag">Photoshop</span><span class="tag">Canva</span></p>
-        <div class="footer-num">- 1 -</div>
-      </div>
-    </div>
+          <!-- 个人主照片剪报/贴纸位 -->
+          <div class="polaroid" style="width: 80%; transform: rotate(-3deg);">
+            <div class="polaroid-img">
+              <span style="font-size: 24px;">📸</span>
+              <span style="font-weight: bold; margin-top: 4px;">PERSONAL PHOTO</span>
+              <span style="font-size: 10px; opacity: 0.7;">(剪报个人照位置)</span>
+            </div>
+            <p style="text-align: center; font-size: 10px; margin: 8px 0 0 0; font-family: cursive;">Yutong Weng // 2026</p>
+          </div>
 
-    <!-- 第 2 页 -->
-    <div class="page">
-      <div class="page-content">
-        <h2>02 / CONTENT</h2>
-        <h1>新媒体运营作品</h1>
-        <p><b>爆款文章打造与排版：</b></p>
-        <p>洞察用户心理，策划选题，通过结构化叙事实现优质传播。</p>
-        <div style="background: #e5dbc8; padding: 10px; margin: 10px 0; border-left: 3px solid var(--accent-red);">
-          <p style="margin:0; font-weight:bold;">深度报道与采访</p>
-          <p style="margin:0; font-size:11px;">校园文化、科技议题与人物专访实录。</p>
+          <div style="text-align: center; width: 100%;">
+            <h2>Media & Operations</h2>
+            <p style="font-size: 11px; font-weight: bold;">复旦大学新闻学在读 // 复合型新媒体运营人</p>
+          </div>
+
+          <div class="page-footer">
+            <span>PRESS TO FLIP ➔</span>
+            <span>VOL.1</span>
+          </div>
         </div>
-        <div class="footer-num">- 2 -</div>
       </div>
-    </div>
 
-    <!-- 第 3 页 -->
-    <div class="page">
-      <div class="page-content">
-        <h2>03 / STRATEGY</h2>
-        <h1>营销与策划</h1>
-        <p><b>数据清洗与分析：</b>运用 SQL & Excel 挖掘用户特征与数据增长点。</p>
-        <p><b>商业提案：</b>整合营销策略思考、活动落地与 ROI 评估。</p>
-        <div class="footer-num">- 3 -</div>
+      <!-- ==================== 第 1 页：拼贴 Profile ==================== -->
+      <div class="page">
+        <div class="tape tape-top-right"></div>
+        <div class="stamp" style="bottom: 40px; right: 20px; color: var(--gold); border-color: var(--gold);">PROFILE</div>
+
+        <div style="height: 100%; display: flex; flex-direction: column;">
+          <h2>01 / ABOUT ME</h2>
+          <h1>关于我与核心技能</h1>
+          
+          <p>具备新媒体爆款内容打造、数据驱动分析与整合营销视角。立志做<b>“懂内容、会数据、能落地”</b>的运营人。</p>
+
+          <div class="project-card" style="transform: rotate(-1.5deg); background: #f7f3ec;">
+            <p style="font-weight: bold; color: var(--bistre); margin-bottom: 4px;">🎓 教育背景</p>
+            <p style="font-size: 11px; margin: 0;">复旦大学 新闻学院 (本科在读)</p>
+          </div>
+
+          <div class="project-card" style="transform: rotate(1deg); margin-top: 12px;">
+            <p style="font-weight: bold; color: var(--bistre); margin-bottom: 6px;">🛠️ 技能栈 (Toolbox)</p>
+            <div>
+              <span class="clipping-tag" style="font-size: 10px; padding: 2px 6px;">SQL</span>
+              <span class="clipping-tag" style="font-size: 10px; padding: 2px 6px; background: var(--cadet-gray); color: #fff;">Excel</span>
+              <span class="clipping-tag" style="font-size: 10px; padding: 2px 6px; background: var(--seal-brown); color: #fff;">Photoshop</span>
+              <span class="clipping-tag" style="font-size: 10px; padding: 2px 6px; background: #8c7b6c; color: #fff;">Canva</span>
+            </div>
+          </div>
+
+          <div class="page-footer">
+            <span>01</span>
+            <span>PORTFOLIO ZINE</span>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- 封底 -->
-    <div class="page cover" data-density="hard">
-      <div class="page-content">
-        <h1>CONTACT</h1>
-        <h2>联系我</h2>
-        <p style="margin-top: 20px;"><b>GitHub:</b> github.com/saoirseweng</p>
-        <p style="margin-top: 30px; font-size: 11px;">© 2026 Yutong Weng. All Rights Reserved.</p>
+      <!-- ==================== 第 2 页：新媒体运营作品 ==================== -->
+      <div class="page">
+        <div class="tape tape-top-left" style="width: 50px;"></div>
+        
+        <div style="height: 100%; display: flex; flex-direction: column;">
+          <h2>02 / OPERATIONS</h2>
+          <h1>新媒体运营作品集</h1>
+
+          <div class="polaroid" style="transform: rotate(2deg); padding-bottom: 12px; margin: 5px 0;">
+            <div class="polaroid-img" style="height: 90px; background: #e8e2d5;">
+              <span>📰 文章爆款案例封面图</span>
+            </div>
+            <p style="font-size: 11px; font-weight: bold; margin: 6px 0 0 0;">深度策划 // 阅读量 10W+</p>
+          </div>
+
+          <p style="font-size: 11px; margin-top: 5px;">通过结构化叙事与敏锐的用户心理洞察，打造高传播力的社媒爆款内容。</p>
+
+          <div class="project-card" style="border-left: 4px solid var(--gold);">
+            <p style="font-weight: bold; font-size: 11px;">📌 深度报道与专栏策划</p>
+            <p style="font-size: 10px; color: #555; margin: 0;">涵盖校园议题、青年文化与科技趋势的现场采访写作。</p>
+          </div>
+
+          <div class="page-footer">
+            <span>02</span>
+            <span>CONTENT & GROWTH</span>
+          </div>
+        </div>
       </div>
-    </div>
 
+      <!-- ==================== 第 3 页：营销与数据 ==================== -->
+      <div class="page">
+        <div class="stamp" style="top: 25px; right: 15px;">MARTECH</div>
+
+        <div style="height: 100%; display: flex; flex-direction: column;">
+          <h2>03 / STRATEGY</h2>
+          <h1>营销策划与数据</h1>
+
+          <div class="project-card" style="transform: rotate(-1deg); background: rgba(125, 147, 158, 0.15);">
+            <p style="font-weight: bold; font-size: 12px; color: var(--bistre);">📊 数据清洗与用户画像分析</p>
+            <p style="font-size: 11px;">利用 SQL 提取数据、Excel 建模，精准定位增长痛点与转化路径。</p>
+          </div>
+
+          <div class="project-card" style="transform: rotate(1.5deg); margin-top: 10px;">
+            <p style="font-weight: bold; font-size: 12px; color: var(--bistre);">💡 整合营销与活动落地</p>
+            <p style="font-size: 11px;">跨部门协调与项目管理，负责方案撰写、ROI 评估与全渠道传播。</p>
+          </div>
+
+          <div class="page-footer">
+            <span>03</span>
+            <span>MARKETING & DATA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== 封底 ==================== -->
+      <div class="page cover-page" data-density="hard">
+        <div class="tape tape-top-right"></div>
+        <div class="cover-frame">
+          <div style="text-align: center; margin-top: 30px;">
+            <div class="clipping-tag" style="background: var(--seal-brown); color: #fff;">THE END</div>
+            <h1 style="border: none; margin-top: 15px;">LET'S CONNECT</h1>
+            <p style="font-size: 12px; font-weight: bold; color: var(--cadet-gray);">期待与您的合作与交流</p>
+          </div>
+
+          <div class="project-card" style="width: 100%; text-align: center; background: #fff;">
+            <p style="margin: 4px 0;"><b>📧 Email:</b> your-email@domain.com</p>
+            <p style="margin: 4px 0;"><b>🔗 GitHub:</b> github.com/saoirseweng</p>
+          </div>
+
+          <div class="page-footer" style="justify-content: center;">
+            <span>© 2026 YUTONG WENG. ALL RIGHTS RESERVED.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <script>
@@ -205,15 +372,15 @@
       const pageFlip = new St.PageFlip(
         document.getElementById('book'),
         {
-          width: 360,
-          height: 500,
+          width: 370,            // 单页宽度
+          height: 520,           // 单页高度
           size: "fixed",
           minWidth: 300,
           maxWidth: 450,
           minHeight: 400,
-          maxHeight: 600,
-          maxShadowOpacity: 0.5,
-          showCover: true,
+          maxHeight: 650,
+          maxShadowOpacity: 0.7, // 加强纸张拖拽时的立体阴影
+          showCover: true,       // 独立硬壳封面
           mobileScrollSupport: false
         }
       );
