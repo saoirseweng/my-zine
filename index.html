@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>翁雨桐 // Personal Portfolio Zine</title>
+  <!-- 引入 Page-Flip 翻页特效库 -->
+  <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
+  <style>
+    :root {
+      --bg-color: #d8cfc4;
+      --paper-color: #f5f0eb;
+      --border-color: #2b2625;
+      --accent-red: #a33327;
+      --text-main: #2b2625;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-color);
+      font-family: 'Courier New', Courier, STSong, '华文宋体', serif;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .tip-bar {
+      margin-bottom: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--accent-red);
+      background: #ebdcc9;
+      padding: 6px 16px;
+      border: 1px dashed var(--border-color);
+      letter-spacing: 1px;
+    }
+
+    .zine-box {
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    }
+
+    .page {
+      padding: 25px;
+      background-color: var(--paper-color);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      background-image: radial-gradient(#d3cbbe 1px, transparent 0);
+      background-size: 12px 12px;
+    }
+
+    .page-content {
+      border: 2px dashed var(--border-color);
+      height: 100%;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1 {
+      font-size: 26px;
+      border-bottom: 3px solid var(--border-color);
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 16px;
+      background-color: var(--border-color);
+      color: var(--paper-color);
+      padding: 3px 8px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    p {
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 10px;
+      text-align: justify;
+    }
+
+    .tag {
+      display: inline-block;
+      border: 1px solid var(--accent-red);
+      color: var(--accent-red);
+      font-size: 11px;
+      padding: 1px 5px;
+      margin-right: 4px;
+      font-weight: bold;
+    }
+
+    .cover {
+      background-color: #ebdcc9;
+      text-align: center;
+    }
+
+    .cover .page-content {
+      border: 3px double var(--border-color);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .photo-frame {
+      width: 110px;
+      height: 130px;
+      border: 2px solid var(--border-color);
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      font-size: 12px;
+      color: #888;
+      box-shadow: 3px 3px 0px var(--border-color);
+    }
+
+    .footer-num {
+      text-align: right;
+      font-size: 12px;
+      font-weight: bold;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="tip-bar">📖 鼠标点击或拖拽书页边缘可翻页 📖</div>
+
+  <div id="book" class="zine-box">
+    
+    <!-- 封面 -->
+    <div class="page cover" data-density="hard">
+      <div class="page-content">
+        <span class="tag">VOL. 01</span>
+        <h1 style="font-size: 30px; border: none; margin-top: 10px;">翁雨桐</h1>
+        <p style="font-style: italic; font-size: 13px;">PERSONAL PORTFOLIO ZINE</p>
+        <div class="photo-frame">[ PHOTO ]</div>
+        <h2>Media & Marketing</h2>
+        <p style="font-size: 12px; max-width: 85%;">复旦大学新闻学在读 // 新媒体运营与整合营销作品集</p>
+      </div>
+    </div>
+
+    <!-- 第 1 页 -->
+    <div class="page">
+      <div class="page-content">
+        <h2>01 / PROFILE</h2>
+        <h1>个人简介</h1>
+        <p><b>学校：</b>复旦大学新闻学院</p>
+        <p><b>定位：</b>懂内容、会数据、能落地的复合型运营/营销人。</p>
+        <hr style="margin: 10px 0; border: none; border-top: 1px dashed #333;">
+        <p><b>技能标签：</b></p>
+        <p style="margin-top:5px;"><span class="tag">SQL</span><span class="tag">Excel</span><span class="tag">Photoshop</span><span class="tag">Canva</span></p>
+        <div class="footer-num">- 1 -</div>
+      </div>
+    </div>
+
+    <!-- 第 2 页 -->
+    <div class="page">
+      <div class="page-content">
+        <h2>02 / CONTENT</h2>
+        <h1>新媒体运营作品</h1>
+        <p><b>爆款文章打造与排版：</b></p>
+        <p>洞察用户心理，策划选题，通过结构化叙事实现优质传播。</p>
+        <div style="background: #e5dbc8; padding: 10px; margin: 10px 0; border-left: 3px solid var(--accent-red);">
+          <p style="margin:0; font-weight:bold;">深度报道与采访</p>
+          <p style="margin:0; font-size:11px;">校园文化、科技议题与人物专访实录。</p>
+        </div>
+        <div class="footer-num">- 2 -</div>
+      </div>
+    </div>
+
+    <!-- 第 3 页 -->
+    <div class="page">
+      <div class="page-content">
+        <h2>03 / STRATEGY</h2>
+        <h1>营销与策划</h1>
+        <p><b>数据清洗与分析：</b>运用 SQL & Excel 挖掘用户特征与数据增长点。</p>
+        <p><b>商业提案：</b>整合营销策略思考、活动落地与 ROI 评估。</p>
+        <div class="footer-num">- 3 -</div>
+      </div>
+    </div>
+
+    <!-- 封底 -->
+    <div class="page cover" data-density="hard">
+      <div class="page-content">
+        <h1>CONTACT</h1>
+        <h2>联系我</h2>
+        <p style="margin-top: 20px;"><b>GitHub:</b> github.com/saoirseweng</p>
+        <p style="margin-top: 30px; font-size: 11px;">© 2026 Yutong Weng. All Rights Reserved.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const pageFlip = new St.PageFlip(
+        document.getElementById('book'),
+        {
+          width: 360,
+          height: 500,
+          size: "fixed",
+          minWidth: 300,
+          maxWidth: 450,
+          minHeight: 400,
+          maxHeight: 600,
+          maxShadowOpacity: 0.5,
+          showCover: true,
+          mobileScrollSupport: false
+        }
+      );
+      pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+    });
+  </script>
+</body>
+</html>
